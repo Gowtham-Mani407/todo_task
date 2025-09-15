@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todo_task/bloc/task_bloc.dart';
 import 'package:todo_task/bloc/task_event.dart';
 import 'package:todo_task/model/taskmodel.dart';
+import 'package:todo_task/view/widgets/addtaskdialog.dart';
 
 class CustomCard extends StatelessWidget {
   final Task task;
@@ -69,38 +70,94 @@ class CustomCard extends StatelessWidget {
               ),
             ),
 
-            IconButton(
-              icon: const Icon(
-                Icons.delete_forever_outlined,
-                color: Colors.red,
-              ),
-              onPressed: () {
-                showDialog(
-                  context: context,
-                  builder: (ctx) => AlertDialog(
-                    title: const Text("Delete Task"),
-                    content: const Text(
-                      "Are you sure you want to delete this task?",
-                    ),
-                    actions: [
-                      TextButton(
-                        onPressed: () => Navigator.of(ctx).pop(), 
-                        child: const Text("Cancel"),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          context.read<TaskBloc>().add(DeleteTask(task.id));
-                          Navigator.of(ctx).pop(); 
-                        },
-                        child: const Text(
-                          "Delete",
-                          style: TextStyle(color: Colors.red),
-                        ),
-                      ),
-                    ],
+            Column(
+              children: [
+                IconButton(
+                  icon: const Icon(
+                    Icons.delete_forever_outlined,
+                    color: Colors.red,
                   ),
-                );
-              },
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (ctx) => AlertDialog(
+                        title: const Text("Delete Task"),
+                        content: const Text(
+                          "Are you sure you want to delete this task?",
+                        ),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.of(ctx).pop(),
+                            child: const Text("Cancel"),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              context.read<TaskBloc>().add(DeleteTask(task.id));
+                              Navigator.of(ctx).pop();
+                            },
+                            child: const Text(
+                              "Delete",
+                              style: TextStyle(color: Colors.red),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
+                SizedBox(height: 10),
+                InkWell(
+                  onTap: () {
+                    final titleController = TextEditingController(
+                      text: task.title,
+                    );
+                    final descController = TextEditingController(
+                      text: task.description,
+                    );
+
+                    showDialog(
+                      context: context,
+                      barrierColor: Colors.black54,
+                      builder: (_) => AddTaskDialog(
+                        titleController: titleController,
+                        descController: descController,
+                        via: 'edit',
+                        onAdd: () {
+                          if (titleController.text.isNotEmpty) {
+                            context.read<TaskBloc>().add(
+                              UpdateTask(
+                                taskId: task.id,
+                                title: titleController.text,
+                                description: descController.text,
+                              ),
+                            );
+                            Navigator.pop(context);
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text("Title cannot be empty"),
+                              ),
+                            );
+                          }
+                        },
+                      ),
+                    );
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.blue,
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      child: Text(
+                        "Edit task",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ],
         ),

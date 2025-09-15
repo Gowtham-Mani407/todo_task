@@ -4,12 +4,14 @@ class AddTaskDialog extends StatelessWidget {
   final TextEditingController titleController;
   final TextEditingController descController;
   final VoidCallback onAdd;
+  final via;
 
   const AddTaskDialog({
     super.key,
     required this.titleController,
     required this.descController,
     required this.onAdd,
+    required this.via,
   });
 
   @override
@@ -38,10 +40,7 @@ class AddTaskDialog extends StatelessWidget {
               children: [
                 const Text(
                   "Add New Task",
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
                 IconButton(
                   icon: const Icon(Icons.close),
@@ -89,9 +88,13 @@ class AddTaskDialog extends StatelessWidget {
                   ),
                 ),
                 onPressed: onAdd,
-                child:  Text(
-                  "Add Task",
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold , color: Colors.black),
+                child: Text(
+                  via == "edit" ? "update" : " Add Task",
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
                 ),
               ),
             ),

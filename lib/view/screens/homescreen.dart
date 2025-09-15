@@ -57,11 +57,12 @@ class HomeScreen extends StatelessWidget {
         onPressed: () {
           showDialog(
             context: context,
-            barrierColor: Colors.black54, 
+            barrierColor: Colors.black54,
             builder: (_) => AddTaskDialog(
               titleController: titleController,
               descController: descController,
               onAdd: addTask,
+              via: 'addnew',
             ),
           );
         },

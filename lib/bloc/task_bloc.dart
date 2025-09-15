@@ -22,7 +22,22 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
     });
 
     on<DeleteTask>((event, emit) {
-      final updated = state.tasks.where((item) => item.id != event.taskId).toList();
+      final updated = state.tasks
+          .where((item) => item.id != event.taskId)
+          .toList();
+      emit(state.copyWith(tasks: updated));
+    });
+
+    on<UpdateTask>((event, emit) {
+      final updated = state.tasks.map((task) {
+        if (task.id == event.taskId) {
+          return task.copyWith(
+            title: event.title,
+            description: event.description,
+          );
+        }
+        return task;
+      }).toList();
       emit(state.copyWith(tasks: updated));
     });
   }

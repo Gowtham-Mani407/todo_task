@@ -31,3 +31,16 @@ class DeleteTask extends TaskEvent {
   @override
   List<Object?> get props => [taskId];
 }
+
+
+class UpdateTask extends TaskEvent {
+  final String taskId;
+  final String title;
+  final String description;
+
+  UpdateTask({
+    required this.taskId,
+    required this.title,
+    required this.description,
+  });
+}
